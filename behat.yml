@@ -6,3 +6,7 @@ default:
     extensions:
         Behat\Symfony2Extension: ~
         DAMA\DoctrineTestBundle\Behat\ServiceContainer\DoctrineExtension: ~
+        Behat\MinkExtension:
+            sessions:
+                default:
+                    goutte: ~
