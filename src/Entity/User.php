@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -26,9 +28,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -37,6 +36,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
+
+    /**
+     * @var Collection<int, UserBookBorrow>
+     */
+    #[ORM\OneToMany(targetEntity: UserBookBorrow::class, mappedBy: 'borrower')]
+    private Collection $userBookBorrows;
+
+    public function __construct()
+    {
+        $this->userBookBorrows = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -133,6 +143,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserBookBorrow>
+     */
+    public function getUserBookBorrows(): Collection
+    {
+        return $this->userBookBorrows;
+    }
+
+    public function addUserBookBorrow(UserBookBorrow $userBookBorrow): static
+    {
+        if (!$this->userBookBorrows->contains($userBookBorrow)) {
+            $this->userBookBorrows->add($userBookBorrow);
+            $userBookBorrow->setBorrower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserBookBorrow(UserBookBorrow $userBookBorrow): static
+    {
+        if ($this->userBookBorrows->removeElement($userBookBorrow)) {
+            // set the owning side to null (unless already changed)
+            if ($userBookBorrow->getBorrower() === $this) {
+                $userBookBorrow->setBorrower(null);
+            }
+        }
 
         return $this;
     }
