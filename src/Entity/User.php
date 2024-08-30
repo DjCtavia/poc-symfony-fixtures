@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -15,9 +16,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private ?string $id = null;
 
     #[ORM\Column(length: 180)]
     private ?string $email = null;
@@ -43,12 +43,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserBookBorrow::class, mappedBy: 'borrower')]
     private Collection $userBookBorrows;
 
-    public function __construct()
-    {
+    public function __construct(
+        ?string $email = null,
+        ?string $firstname = null,
+        ?string $lastname = null
+    ) {
         $this->userBookBorrows = new ArrayCollection();
+        $this->email = $email;
+        $this->firstname = $firstname;
+        $this->lastname = $lastname;
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }

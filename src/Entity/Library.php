@@ -6,14 +6,14 @@ use App\Repository\LibraryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: LibraryRepository::class)]
 class Library
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private ?Uuid $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -24,12 +24,14 @@ class Library
     #[ORM\OneToMany(targetEntity: Shelf::class, mappedBy: 'library')]
     private Collection $Shelves;
 
-    public function __construct()
-    {
+    public function __construct(
+        ?string $name = null
+    ) {
         $this->Shelves = new ArrayCollection();
+        $this->name = $name;
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }

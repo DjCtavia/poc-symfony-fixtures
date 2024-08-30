@@ -4,14 +4,14 @@ namespace App\Entity;
 
 use App\Repository\UserBookBorrowRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserBookBorrowRepository::class)]
 class UserBookBorrow
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private ?string $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'userBookBorrows')]
     private ?User $borrower = null;
@@ -25,7 +25,7 @@ class UserBookBorrow
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }

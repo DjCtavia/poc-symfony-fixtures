@@ -6,14 +6,14 @@ use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    #[ORM\Column(type: 'uuid', unique: true)]
+    private ?Uuid $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -27,12 +27,16 @@ class Book
     #[ORM\ManyToMany(targetEntity: Shelf::class, mappedBy: 'books')]
     private Collection $shelves;
 
-    public function __construct()
-    {
+    public function __construct(
+        ?string $name = null,
+        ?string $isbn = null
+    ) {
         $this->shelves = new ArrayCollection();
+        $this->name = $name;
+        $this->isbn = $isbn;
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
