@@ -1,0 +1,8 @@
+default:
+    suites:
+        default:
+            contexts:
+                - App\Features\Context\FeatureContext
+    extensions:
+        Behat\Symfony2Extension: ~
+        DAMA\DoctrineTestBundle\Behat\ServiceContainer\DoctrineExtension: ~
