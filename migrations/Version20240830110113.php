@@ -7,7 +7,7 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-final class Version20240830105042 extends AbstractMigration
+final class Version20240830110113 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -16,26 +16,17 @@ final class Version20240830105042 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TABLE book (id UUID NOT NULL, name VARCHAR(255) NOT NULL, isbn VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('COMMENT ON COLUMN book.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE library (id UUID NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('COMMENT ON COLUMN library.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE shelf (id UUID NOT NULL, library_id UUID NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE book (id VARCHAR(255) NOT NULL, name VARCHAR(255) NOT NULL, isbn VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE library (id VARCHAR(255) NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE shelf (id VARCHAR(255) NOT NULL, library_id VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_A5475BE3FE2541D7 ON shelf (library_id)');
-        $this->addSql('COMMENT ON COLUMN shelf.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN shelf.library_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE shelf_book (shelf_id UUID NOT NULL, book_id UUID NOT NULL, PRIMARY KEY(shelf_id, book_id))');
+        $this->addSql('CREATE TABLE shelf_book (shelf_id VARCHAR(255) NOT NULL, book_id VARCHAR(255) NOT NULL, PRIMARY KEY(shelf_id, book_id))');
         $this->addSql('CREATE INDEX IDX_431D356F7C12FBC0 ON shelf_book (shelf_id)');
         $this->addSql('CREATE INDEX IDX_431D356F16A2B381 ON shelf_book (book_id)');
-        $this->addSql('COMMENT ON COLUMN shelf_book.shelf_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN shelf_book.book_id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE "user" (id UUID NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE "user" (id VARCHAR(255) NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_IDENTIFIER_EMAIL ON "user" (email)');
-        $this->addSql('COMMENT ON COLUMN "user".id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE user_book_borrow (id UUID NOT NULL, borrower_id UUID DEFAULT NULL, due_date_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE user_book_borrow (id VARCHAR(255) NOT NULL, borrower_id VARCHAR(255) DEFAULT NULL, due_date_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_D5176AA811CE312B ON user_book_borrow (borrower_id)');
-        $this->addSql('COMMENT ON COLUMN user_book_borrow.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('COMMENT ON COLUMN user_book_borrow.borrower_id IS \'(DC2Type:uuid)\'');
         $this->addSql('COMMENT ON COLUMN user_book_borrow.due_date_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN user_book_borrow.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN user_book_borrow.updated_at IS \'(DC2Type:datetime_immutable)\'');

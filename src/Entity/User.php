@@ -16,7 +16,7 @@ use Symfony\Component\Uid\Uuid;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Column(type: 'string', unique: true)]
     private ?string $id = null;
 
     #[ORM\Column(length: 180)]
@@ -44,17 +44,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $userBookBorrows;
 
     public function __construct(
+        ?string $id = null,
         ?string $email = null,
         ?string $firstname = null,
         ?string $lastname = null
     ) {
         $this->userBookBorrows = new ArrayCollection();
+        $this->id = $id ?? Uuid::v4();
         $this->email = $email;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?string
     {
         return $this->id;
     }

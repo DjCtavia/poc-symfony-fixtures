@@ -12,8 +12,8 @@ use Symfony\Component\Uid\Uuid;
 class Book
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid', unique: true)]
-    private ?Uuid $id = null;
+    #[ORM\Column(type: 'string', unique: true)]
+    private ?string $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $name = null;
@@ -28,15 +28,17 @@ class Book
     private Collection $shelves;
 
     public function __construct(
+        ?string $id = null,
         ?string $name = null,
         ?string $isbn = null
     ) {
         $this->shelves = new ArrayCollection();
+        $this->id = $id ?? Uuid::v4();
         $this->name = $name;
         $this->isbn = $isbn;
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?string
     {
         return $this->id;
     }

@@ -12,7 +12,7 @@ use Symfony\Component\Uid\Uuid;
 class Shelf
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Column(type: 'string', unique: true)]
     private ?string $id = null;
 
     /**
@@ -25,12 +25,13 @@ class Shelf
     #[ORM\JoinColumn(nullable: false)]
     private ?Library $library = null;
 
-    public function __construct()
+    public function __construct(?string $id = null)
     {
         $this->books = new ArrayCollection();
+        $this->id = $id ?? Uuid::v4();
     }
 
-    public function getId(): ?Uuid
+    public function getId(): ?string
     {
         return $this->id;
     }

@@ -10,7 +10,7 @@ use Symfony\Component\Uid\Uuid;
 class UserBookBorrow
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Column(type: 'string', unique: true)]
     private ?string $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'userBookBorrows')]
@@ -25,7 +25,21 @@ class UserBookBorrow
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    public function getId(): ?Uuid
+    public function __construct(
+        ?string $id,
+        ?User $borrower,
+        ?\DateTimeImmutable $due_date_at,
+        ?\DateTimeImmutable $created_at,
+        ?\DateTimeImmutable $updated_at
+    ) {
+        $this->id = $id;
+        $this->borrower = $borrower;
+        $this->due_date_at = $due_date_at;
+        $this->created_at = $created_at;
+        $this->updated_at = $updated_at;
+    }
+
+    public function getId(): ?string
     {
         return $this->id;
     }
