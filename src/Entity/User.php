@@ -43,6 +43,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: UserBookBorrow::class, mappedBy: 'borrower')]
     private Collection $userBookBorrows;
 
+    #[ORM\OneToMany(targetEntity: UserLicence::class, mappedBy: 'user')]
+    private Collection $userLicences;
+
     public function __construct(
         ?string $id = null,
         ?string $email = null,
@@ -179,6 +182,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($userBookBorrow->getBorrower() === $this) {
                 $userBookBorrow->setBorrower(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addUserLicence(UserLicence $userLicence): static
+    {
+        if (!$this->userLicences->contains($userLicence)) {
+            $this->userLicences->add($userLicence);
+            $userLicence->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserLicence(UserLicence $userLicence): static
+    {
+        if ($this->userLicences->removeElement($userLicence)) {
+            // set the owning side to null (unless already changed)
+            if ($userLicence->getUser() === $this) {
+                $userLicence->setUser(null);
             }
         }
 
